@@ -1190,6 +1190,249 @@ describe.skip("InferenceClient", () => {
 		TIMEOUT
 	);
 
+	describe.concurrent("RegoloAI", () => {
+		const client = new InferenceClient(env.REGOLO_API_KEY ?? "dummy");
+
+		HARDCODED_MODEL_INFERENCE_MAPPING["regoloai"] = {
+			"meta-llama/Llama-3.1-8B-Instruct": {
+				provider: "regoloai",
+				providerId: "Llama-3.1-8B-Instruct",
+				hfModelId: "meta-llama/Llama-3.1-8B-Instruct",
+				task: "conversational",
+				status: "live",
+			},
+			"meta-llama/Llama-3.3-70B-Instruct": {
+				provider: "regoloai",
+				providerId: "Llama-3.3-70B-Instruct",
+				hfModelId: "meta-llama/Llama-3.3-70B-Instruct",
+				task: "conversational",
+				status: "live",
+			},
+			"microsoft/phi-4": {
+				provider: "regoloai",
+				providerId: "Phi-4",
+				hfModelId: "microsoft/phi-4",
+				task: "conversational",
+				status: "live",
+			},
+			"Qwen/Qwen3-8B": {
+				provider: "regoloai",
+				providerId: "Qwen3-8B",
+				hfModelId: "Qwen/Qwen3-8B",
+				task: "conversational",
+				status: "live",
+			},
+			"mii-llm/maestrale-chat-v0.4-beta": {
+				provider: "regoloai",
+				providerId: "maestrale-chat-v0.4-beta",
+				hfModelId: "mii-llm/maestrale-chat-v0.4-beta",
+				task: "conversational",
+				status: "live",
+			},
+		};
+
+		it("chatCompletion Llama-3.1-8B-Instruct", async () => {
+			const res = await client.chatCompletion({
+				model: "meta-llama/Llama-3.1-8B-Instruct",
+				provider: "regoloai",
+				messages: [{ role: "user", content: "1 + 1 = ?" }],
+			});
+
+			const content = res.choices?.[0]?.message?.content;
+			expect(content).toBeDefined();
+			expect(content).toBeTruthy();
+			expect(content?.toLowerCase()).toContain("2");
+		});
+
+		it("chatCompletion stream Llama-3.1-8B-Instruct", async () => {
+			const stream = client.chatCompletionStream({
+				model: "meta-llama/Llama-3.1-8B-Instruct",
+				provider: "regoloai",
+				messages: [{ role: "user", content: "Complete the equation 1 + 1 = , just the answer" }],
+			}) as AsyncGenerator<ChatCompletionStreamOutput>;
+			let out = "";
+			for await (const chunk of stream) {
+				if (chunk.choices && chunk.choices.length > 0) {
+					out += chunk.choices[0].delta.content;
+				}
+			}
+			expect(out).toBeTruthy();
+			expect(out).toContain("2");
+		});
+
+		it("textGeneration Llama-3.1-8B-Instruct", async () => {
+			const res = await client.textGeneration({
+				model: "meta-llama/Llama-3.1-8B-Instruct",
+				provider: "regoloai",
+				inputs: "A B C ",
+				parameters: { temperature: 0, top_p: 0.01, max_new_tokens: 1 },
+			});
+			expect(res.generated_text.length > 0);
+			expect(res.generated_text).toContain("D");
+		}, 40_000);
+
+		it("chatCompletion Llama-3.3-70B-Instruct", async () => {
+			const res = await client.chatCompletion({
+				model: "meta-llama/Llama-3.3-70B-Instruct",
+				provider: "regoloai",
+				messages: [{ role: "user", content: "1 + 1 = ?" }],
+			});
+
+			const content = res.choices?.[0]?.message?.content;
+			expect(content).toBeDefined();
+			expect(content).toBeTruthy();
+			expect(content?.toLowerCase()).toContain("2");
+		});
+
+		it("chatCompletion stream Llama-3.3-70B-Instruct", async () => {
+			const stream = client.chatCompletionStream({
+				model: "meta-llama/Llama-3.3-70B-Instruct",
+				provider: "regoloai",
+				messages: [{ role: "user", content: "Complete the equation 1 + 1 = , just the answer" }],
+			}) as AsyncGenerator<ChatCompletionStreamOutput>;
+			let out = "";
+			for await (const chunk of stream) {
+				if (chunk.choices && chunk.choices.length > 0) {
+					out += chunk.choices[0].delta.content;
+				}
+			}
+			expect(out).toContain("2");
+			expect(out).toBeTruthy();
+		});
+
+		it("textGeneration Llama-3.3-70B-Instruct", async () => {
+			const res = await client.textGeneration({
+				model: "meta-llama/Llama-3.3-70B-Instruct",
+				provider: "regoloai",
+				inputs: "A B C ",
+				parameters: { temperature: 0, top_p: 0.01, max_new_tokens: 1 },
+			});
+			expect(res.generated_text.length > 0);
+			expect(res.generated_text).toContain("D");
+		}, 40_000);
+
+		it("chatCompletion phi-4", async () => {
+			const res = await client.chatCompletion({
+				model: "microsoft/phi-4",
+				provider: "regoloai",
+				messages: [{ role: "user", content: "1 + 1 = ?" }],
+			});
+
+			const content = res.choices?.[0]?.message?.content;
+			expect(content).toBeDefined();
+			expect(content).toBeTruthy();
+			expect(content?.toLowerCase()).toContain("2");
+		});
+
+		it("chatCompletion stream phi-4", async () => {
+			const stream = client.chatCompletionStream({
+				model: "microsoft/phi-4",
+				provider: "regoloai",
+				messages: [{ role: "user", content: "Complete the equation 1 + 1 = , just the answer" }],
+			}) as AsyncGenerator<ChatCompletionStreamOutput>;
+			let out = "";
+			for await (const chunk of stream) {
+				if (chunk.choices && chunk.choices.length > 0) {
+					out += chunk.choices[0].delta.content;
+				}
+			}
+			expect(out).toBeTruthy();
+			expect(out).toContain("2");
+		});
+
+		it("textGeneration phi-4", async () => {
+			const res = await client.textGeneration({
+				model: "microsoft/phi-4",
+				provider: "regoloai",
+				inputs: "Complete the equation 1 + 1 = ",
+				parameters: { temperature: 0, top_p: 0.01, max_new_tokens: 1 },
+			});
+			expect(res.generated_text.length > 0);
+			expect(res.generated_text).toContain("2");
+		}, 40_000);
+
+		it("chatCompletion Qwen3-8B", async () => {
+			const res = await client.chatCompletion({
+				model: "Qwen/Qwen3-8B",
+				provider: "regoloai",
+				messages: [{ role: "user", content: "1 + 1 = ?" }],
+			});
+
+			const content = res.choices?.[0]?.message?.content;
+			expect(content).toBeDefined();
+			expect(content).toBeTruthy();
+			expect(content?.toLowerCase()).toContain("2");
+		}, 100000);
+
+		it("chatCompletion stream Qwen3-8B", async () => {
+			const stream = client.chatCompletionStream({
+				model: "Qwen/Qwen3-8B",
+				provider: "regoloai",
+				messages: [{ role: "user", content: "Complete the equation 1 + 1 = , just the answer" }],
+			}) as AsyncGenerator<ChatCompletionStreamOutput>;
+			let out = "";
+			for await (const chunk of stream) {
+				if (chunk.choices && chunk.choices.length > 0) {
+					out += chunk.choices[0].delta.content;
+				}
+			}
+			expect(out).toBeTruthy();
+			expect(out).toContain("2");
+		}, 100000);
+
+		it("textGeneration Qwen3-8B", async () => {
+			const res = await client.textGeneration({
+				model: "Qwen/Qwen3-8B",
+				provider: "regoloai",
+				inputs: "A, B, C, ",
+				parameters: { temperature: 0.5, top_p: 0.9, max_new_tokens: 1 },
+			});
+			expect(res.generated_text.length > 0);
+			expect(res.generated_text).toContain("D");
+		}, 40_000);
+
+		it("chatCompletion maestrale-chat-v0.4-beta", async () => {
+			const res = await client.chatCompletion({
+				model: "mii-llm/maestrale-chat-v0.4-beta",
+				provider: "regoloai",
+				messages: [{ role: "user", content: "1 + 1 = ?" }],
+			});
+
+			const content = res.choices?.[0]?.message?.content;
+			expect(content).toBeDefined();
+			expect(content).toBeTruthy();
+			expect(content?.toLowerCase()).toContain("2");
+		}, 50000);
+
+		it("chatCompletion stream maestrale-chat-v0.4-beta", async () => {
+			const stream = client.chatCompletionStream({
+				model: "mii-llm/maestrale-chat-v0.4-beta",
+				provider: "regoloai",
+				messages: [{ role: "user", content: "Complete the equation 1 + 1 = , just the answer" }],
+			}) as AsyncGenerator<ChatCompletionStreamOutput>;
+			let out = "";
+			for await (const chunk of stream) {
+				if (chunk.choices && chunk.choices.length > 0) {
+					out += chunk.choices[0].delta.content;
+				}
+			}
+			expect(out).toBeTruthy();
+			expect(out).toContain("2");
+		}, 50000);
+
+		it("textGeneration maestrale-chat-v0.4-beta", async () => {
+			const res = await client.textGeneration({
+				model: "mii-llm/maestrale-chat-v0.4-beta",
+				provider: "regoloai",
+				inputs: "Complete the equation 1 + 1 = ",
+				parameters: { temperature: 0, top_p: 0.01, max_new_tokens: 1 },
+			});
+			expect(res.generated_text.length > 0);
+			expect(res.generated_text).toContain("2");
+		}, 40_000);
+		TIMEOUT;
+	});
+
 	describe.concurrent(
 		"Replicate",
 		() => {

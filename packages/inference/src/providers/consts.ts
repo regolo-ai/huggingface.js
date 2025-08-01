@@ -32,6 +32,7 @@ export const HARDCODED_MODEL_INFERENCE_MAPPING: Record<
 	nscale: {},
 	openai: {},
 	ovhcloud: {},
+	regoloai: {},
 	replicate: {},
 	sambanova: {},
 	together: {},

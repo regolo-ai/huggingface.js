@@ -45,6 +45,7 @@ import type {
 	ZeroShotClassificationTaskHelper,
 	ZeroShotImageClassificationTaskHelper,
 } from "../providers/providerHelper.js";
+import * as RegoloAI from "../providers/regoloai.js";
 import * as Replicate from "../providers/replicate.js";
 import * as Sambanova from "../providers/sambanova.js";
 import * as Together from "../providers/together.js";
@@ -137,6 +138,10 @@ export const PROVIDERS: Record<InferenceProvider, Partial<Record<InferenceTask, 
 	ovhcloud: {
 		conversational: new OvhCloud.OvhCloudConversationalTask(),
 		"text-generation": new OvhCloud.OvhCloudTextGenerationTask(),
+	},
+	regoloai: {
+		conversational: new RegoloAI.RegoloConversationalTask(),
+		"text-generation": new RegoloAI.RegoloTextGenerationTask(),
 	},
 	replicate: {
 		"text-to-image": new Replicate.ReplicateTextToImageTask(),

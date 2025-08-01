@@ -30,5 +30,10 @@
 		"vite": "^5.0.2",
 		"vitest": "^0.34.6",
 		"webdriverio": "^8.6.7"
+	},
+	"dependencies": {
+		"@huggingface/hub": "^2.4.0",
+		"@huggingface/inference": "^4.6.1",
+		"@huggingface/mcp-client": "^0.2.2"
 	}
 }

@@ -59,6 +59,7 @@ export const INFERENCE_PROVIDERS = [
 	"nscale",
 	"openai",
 	"ovhcloud",
+	"regoloai",
 	"replicate",
 	"sambanova",
 	"together",
